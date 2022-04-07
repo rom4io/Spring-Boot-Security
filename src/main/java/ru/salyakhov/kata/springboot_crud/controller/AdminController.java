@@ -14,32 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class UserController {
+public class AdminController {
     private List<User> firstListUsers = new ArrayList<>();
-    {
-        firstListUsers.add(new User("Alexey", "Alexeev", 21));
-        firstListUsers.add(new User("Petr", "Petrov", 27));
-        firstListUsers.add(new User("Milana", "Milanova", 30));
-        firstListUsers.add(new User("Sidr", "Sidorov", 35));
-        firstListUsers.add(new User("Ivan", "Ivanov", 41));
-    }
-    boolean usersExists = false;
 
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/admin")
     public String findAll(Model model){
-        if(!usersExists){
-            userService.saveList(firstListUsers);
-            usersExists = true;
-        }
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
         return "users";
     }
 
-    @GetMapping(value = "/users/{id}")
+    @GetMapping(value = "/admin/{id}")
     public String findById(@PathVariable("id") Long id, Model model){
         User user = userService.findById(id);
         List<User> users = new ArrayList<>();
@@ -48,34 +36,34 @@ public class UserController {
         return "users";
     }
 
-    @GetMapping("/users/create")
+    @GetMapping("/admin/create")
     public String createUserForm(User user){
         return "users-create";
     }
 
-    @PostMapping("/users/create")
+    @PostMapping("/admin/create")
     public String createUser(User user){
         userService.saveUser(user);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
-    @GetMapping(value = "users/delete/{id}")
+    @GetMapping(value = "admin/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id){
         userService.deleteById(id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/users/update/{id}")
+    @GetMapping("/admin/update/{id}")
     public String updateUserForm(@PathVariable("id") Long id, Model model){
         User user = userService.findById(id);
         model.addAttribute("user", user);
         return "user-update";
     }
 
-    @PostMapping("/users/update")
+    @PostMapping("/admin/update")
     public String updateUser(User user){
         userService.saveUser(user);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
 }
